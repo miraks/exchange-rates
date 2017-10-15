@@ -1,0 +1,26 @@
+{
+  "manifest_version": 2,
+  "name": "Exchange Rates",
+  "version": "1.0.0",
+  "developer": {
+    "name": "Alexey Volodkin",
+    "url": "https://github.com/miraks/exchange-rates"
+  },
+  "applications": {
+    "gecko": {
+      "id": "exchangerates@vldkn.net",
+      "strict_min_version": "55.0"
+    }
+  },
+  "icons": {
+    "48": "icons/icon.png",
+    "96": "icons/icon.png"
+  },
+  "permissions": ["https://wex.nz/api/3/*"],
+  "browser_action": {
+    "browser_style": true,
+    "default_title": "Exchange rates",
+    "default_popup": "popup.html",
+    "default_icon": "icons/icon.png"
+  }
+}
