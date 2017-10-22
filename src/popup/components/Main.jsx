@@ -1,6 +1,7 @@
 import { h, Component } from 'preact'
 import zip from '@/helpers/zip'
 import toObject from '@/helpers/to-object'
+import mapValues from '@/helpers/map-values'
 import getMoexRate from '@/helpers/moex'
 import getCoinbaseRates from '@/helpers/coinbase'
 import getWexRate from '@/helpers/wex'
@@ -22,14 +23,26 @@ const providers = {
   }
 }
 
+const getRates = {
+  moex() {
+    return Promise.all(providers.moex.currencies.map((currency) => getMoexRate(currency)))
+  },
+  coinbase() {
+    return getCoinbaseRates().then((rates) => providers.coinbase.currencies.map((currency) => rates[currency]))
+  },
+  wex() {
+    return Promise.all(providers.wex.currencies.map((currency) => getWexRate(currency)))
+  }
+}
+
 export default class Main extends Component {
   constructor() {
     super()
 
-    this.state = {
-      coinbase: {},
-      wex: {}
-    }
+    this.state = mapValues(providers, () => ({
+      loading: false,
+      rates: {}
+    }))
   }
 
   async componentWillMount() {
@@ -37,45 +50,36 @@ export default class Main extends Component {
   }
 
   async refreshRates() {
-    this.setState((state) => ({ ...state, loading: true }))
-
-    const moexPromises = Promise.all(providers.moex.currencies.map((currency) => getMoexRate(currency)))
-    const wexPromises = Promise.all(providers.wex.currencies.map((currency) => getWexRate(currency)))
-    const promises = Promise.all([moexPromises, getCoinbaseRates(), wexPromises])
-    const [moex, coinbase, wex] = await promises
-
-    this.setState((state) => ({
-      ...state,
-      loading: false,
-      moex: toObject(zip(providers.moex.currencies, moex)),
-      coinbase,
-      wex: toObject(zip(providers.wex.currencies, wex))
-    }))
+    providerIds.forEach((id) => {
+      this.setState((state) => ({ ...state, [id]: { ...state[id], loading: true } }))
+      getRates[id]().then((rates) => {
+        this.setState((state) => ({
+          ...state,
+          [id]: { ...state[id], loading: false, rates: toObject(zip(providers[id].currencies, rates)) }
+        }))
+      })
+    })
   }
 
   dataFor(id) {
-    const prices = this.state[id]
+    const { loading, rates } = this.state[id]
     const { title, currencies } = providers[id]
+
+    const data = loading
+      ? []
+      : currencies.map((currency) => ({
+        id: currency,
+        values: [currency, rates[currency].toFixed(2)]
+      }))
 
     return {
       title,
-      data: currencies.map((currency) => ({
-        id: currency,
-        values: [currency, prices[currency].toFixed(2)]
-      }))
+      loading,
+      data
     }
   }
 
   render() {
-    const { loading } = this.state
-
-    return (
-      <div className="rates">
-        {loading && <div className="rates_loading">Loading</div>}
-        {!loading && (
-          <div className="rates_data">{providerIds.map((id) => <Table key={id} {...this.dataFor(id)}/>)}</div>
-        )}
-      </div>
-    )
+    return <div className="rates">{providerIds.map((id) => <Table key={id} {...this.dataFor(id)}/>)}</div>
   }
 }
