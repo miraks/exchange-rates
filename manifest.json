@@ -1,7 +1,7 @@
 {
   "manifest_version": 2,
   "name": "Exchange Rates",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "developer": {
     "name": "Alexey Volodkin",
     "url": "https://github.com/miraks/exchange-rates"
