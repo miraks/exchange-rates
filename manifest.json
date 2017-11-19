@@ -16,7 +16,7 @@
     "48": "icons/icon.png",
     "96": "icons/icon.png"
   },
-  "permissions": ["https://wex.nz/api/3/*"],
+  "permissions": ["https://wex.nz/api/3/*", "https://api.coinmarketcap.com/v1/*"],
   "browser_action": {
     "browser_style": true,
     "default_title": "Exchange rates",

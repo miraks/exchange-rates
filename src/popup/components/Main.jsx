@@ -4,10 +4,11 @@ import toObject from '@/helpers/to-object'
 import mapValues from '@/helpers/map-values'
 import getMoexRate from '@/helpers/moex'
 import getCoinbaseRates from '@/helpers/coinbase'
+import getCoinmarketRate from '@/helpers/coinmarket'
 import getWexRate from '@/helpers/wex'
 import Table from '@/popup/components/Table'
 
-const providerIds = ['moex', 'coinbase', 'wex']
+const providerIds = ['moex', 'coinbase', 'coinmarket', 'wex']
 const providers = {
   moex: {
     title: 'MOEX',
@@ -17,9 +18,13 @@ const providers = {
     title: 'Coinbase',
     currencies: ['BTC', 'ETH', 'LTC']
   },
+  coinmarket: {
+    title: 'Coinmarket',
+    currencies: ['BTC', 'ETH', 'LTC', 'BCH', 'BTG', 'PPC', 'NMC']
+  },
   wex: {
     title: 'Wex',
-    currencies: ['BTC', 'ETH', 'LTC', 'BCH']
+    currencies: ['BTC', 'ETH', 'LTC', 'BCH', 'PPC', 'NMC']
   }
 }
 
@@ -29,6 +34,9 @@ const getRates = {
   },
   coinbase() {
     return getCoinbaseRates().then((rates) => providers.coinbase.currencies.map((currency) => rates[currency]))
+  },
+  coinmarket() {
+    return Promise.all(providers.coinmarket.currencies.map((currency) => getCoinmarketRate(currency)))
   },
   wex() {
     return Promise.all(providers.wex.currencies.map((currency) => getWexRate(currency)))
