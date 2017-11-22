@@ -6,8 +6,11 @@ const coinMap = {
   LTC: 'litecoin',
   BCH: 'bitcoin-cash',
   BTG: 'bitcoin-gold',
-  PPC: 'peercoin',
-  NMC: 'namecoin'
+  DSH: 'dash',
+  ZEC: 'zcash',
+  NVC: 'novacoin',
+  NMC: 'namecoin',
+  PPC: 'peercoin'
 }
 
 export default async (currency) => {

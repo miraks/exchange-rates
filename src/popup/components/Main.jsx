@@ -20,11 +20,11 @@ const providers = {
   },
   coinmarket: {
     title: 'Coinmarket',
-    currencies: ['BTC', 'ETH', 'LTC', 'BCH', 'BTG', 'PPC', 'NMC']
+    currencies: ['BTC', 'ETH', 'LTC', 'BCH', 'BTG', 'DSH', 'ZEC', 'NVC', 'NMC', 'PPC']
   },
   wex: {
     title: 'Wex',
-    currencies: ['BTC', 'ETH', 'LTC', 'BCH', 'PPC', 'NMC']
+    currencies: ['BTC', 'ETH', 'LTC', 'BCH', 'DSH', 'ZEC', 'NVC', 'NMC', 'PPC']
   }
 }
 
